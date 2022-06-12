@@ -76,7 +76,7 @@ try:
         "remote_args": o_config["rffmpeg"]["remote"]["args"],
         "pre_commands": o_config["rffmpeg"]["commands"]["pre"],
         "ffmpeg_command": o_config["rffmpeg"]["commands"]["ffmpeg"],
-        "ffprobe_command": o_config["rffmpeg"]["commands"]["ffprobe"],
+        "ffprobe_command": o_config["rffmpeg"]["commands"]["ffprobe"]
     }
 except Exception as e:
     log.error("ERROR: Failed to load configuration: %s is missing", e)
@@ -205,6 +205,23 @@ def bad_host(target_host):
     # this run is finished and its statefile removed, however, the host will be retried again
     with open(current_statefile, "a") as statefile:
         statefile.write("badhost " + config["state_contents"].format(host=target_host) + "\n")
+        
+ 
+def mutate_remote_paths(ff_command, target_host):
+    for host in config["remote_hosts"]:
+        if (type(host) is str or host.get("name", None) is None) and host == target_host:
+            # No mutation config. return
+            return ff_command
+        elif host.get("name") == target_host && host.get("commandMutators", None) is None:
+            return ff_command
+        elif host.get("name") == target_host && host.get("commandMutators", None) is not None:
+            for mutator in host["commandMutators"]:
+                ff_command = re.sub(re.compile(mutator["match"]), mutator["replace"], ff_command)
+            
+    return ff_command
+    host_cfg = next((h for h in  config['remote_hosts'] if ), [default value])
+    if config["remote_hosts"]:
+        
 
 
 def setup_remote_command(target_host):
@@ -251,10 +268,10 @@ def setup_remote_command(target_host):
 
     # Verify if we're in ffmpeg or ffprobe mode
     if "ffprobe" in all_args[0]:
-        rffmpeg_ffmpeg_command.append(config["ffprobe_command"])
+        rffmpeg_ffmpeg_command.append(mutate_remote_paths(config["ffprobe_command"], target_host))
         stdout = sys.stdout
     else:
-        rffmpeg_ffmpeg_command.append(config["ffmpeg_command"])
+        rffmpeg_ffmpeg_command.append(mutate_remote_paths(config["ffmpeg_command"], target_host))
 
     # Determine if version, encorders, or decoders is an argument; if so, we output stdout to stdout
     # Weird workaround for something Jellyfin requires...
