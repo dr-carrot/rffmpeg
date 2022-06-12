@@ -33,6 +33,10 @@ rffmpeg:
             - localhost
             - name: gpu1
               weight: 2   # Relative to any non-weighted hosts which have weight 1
+            - name: gpu2
+              mutatePaths: # If the paths need to be changed for the remote host, add these
+                - match: '"/config' # this regex is applied TO THE ENTIRE COMMAND so make sure it is as specific as possible
+                  rewrite: '"/jellyfin'
 
         # The remote SSH user to connect as
         user: jellyfin
