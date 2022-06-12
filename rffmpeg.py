@@ -212,10 +212,10 @@ def mutate_remote_paths(ff_command, target_host):
         if (type(host) is str or host.get("name", None) is None) and host == target_host:
             # No mutation config. return
             return ff_command
-        elif host.get("name") == target_host && host.get("pathMutators", None) is None:
+        elif host.get("name") == target_host && host.get("commandMutators", None) is None:
             return ff_command
-        elif host.get("name") == target_host && host.get("pathMutators", None) is not None:
-            for mutator in host["pathMutators"]:
+        elif host.get("name") == target_host && host.get("commandMutators", None) is not None:
+            for mutator in host["commandMutators"]:
                 ff_command = re.sub(re.compile(mutator["match"]), mutator["replace"], ff_command)
             
     return ff_command
