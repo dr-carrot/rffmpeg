@@ -280,9 +280,9 @@ def setup_remote_command(target_host):
     for arg in cli_ffmpeg_args:
         # Match bad shell characters: * ' ( ) whitespace
         if re.search("[*'()\s|\[\]]", arg):
-            rffmpeg_ffmpeg_command.append('"{}"'.format(arg))
+            rffmpeg_ffmpeg_command.append('"{}"'.format(mutate_remote_paths(arg, target_host)))
         else:
-            rffmpeg_ffmpeg_command.append("{}".format(arg))
+            rffmpeg_ffmpeg_command.append("{}".format(mutate_remote_paths(arg, target_host)))
 
     return rffmpeg_ssh_command, rffmpeg_ffmpeg_command, stdin, stdout, stderr
 
