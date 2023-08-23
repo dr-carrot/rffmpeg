@@ -218,8 +218,9 @@ def mutate_remote_paths(ff_command, target_host):
             mutatedPath = ff_command
             for mutator in host["commandMutators"]:
                 mutatedPath = re.sub(re.compile(mutator["match"]), mutator["replace"], mutatedPath)
-            log.info('mutated: ' + ff_command)
-            log.info('new command: ' + mutatedPath)
+            if mutatedPath is not ff_command:
+                log.info('mutated: ' + ff_command)
+                log.info('new command: ' + mutatedPath)
             return mutatedPath
             
     return ff_command  
