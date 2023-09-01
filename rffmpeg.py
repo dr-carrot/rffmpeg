@@ -189,22 +189,22 @@ def get_target_host():
 
 
 def bad_host(target_host):
-    log.info("Setting bad host %s", target_host)
+    log.info("Not setting bad host %s", target_host)
 
     # Rewrite the statefile, removing all instances of the target_host that were added before
-    with open(current_statefile, "r+") as statefile:
-        new_statefile = statefile.readlines()
-        statefile.seek(0)
-        for line in new_statefile:
-            if target_host not in line:
-                statefile.write(line)
-        statefile.truncate()
+    # with open(current_statefile, "r+") as statefile:
+    #     new_statefile = statefile.readlines()
+    #     statefile.seek(0)
+    #     for line in new_statefile:
+    #         if target_host not in line:
+    #             statefile.write(line)
+    #     statefile.truncate()
 
     # Add the bad host to the statefile
     # This will affect this run, as well as any runs that start while this one is active; once
     # this run is finished and its statefile removed, however, the host will be retried again
-    with open(current_statefile, "a") as statefile:
-        statefile.write("badhost " + config["state_contents"].format(host=target_host) + "\n")
+    # with open(current_statefile, "a") as statefile:
+    #     statefile.write("badhost " + config["state_contents"].format(host=target_host) + "\n")
         
  
 def mutate_remote_paths(ff_command, target_host):
