@@ -284,7 +284,7 @@ def setup_remote_command(target_host):
     # Parse and re-quote any problematic arguments
     for arg in cli_ffmpeg_args:
         # Match bad shell characters: * ' ( ) whitespace
-        if re.search("[*'()\s|\[\]]", arg):
+        if re.search(r"[*'()\s|\[\]]", arg):
             rffmpeg_ffmpeg_command.append('"{}"'.format(mutate_remote_paths(arg, target_host)))
         else:
             rffmpeg_ffmpeg_command.append("{}".format(mutate_remote_paths(arg, target_host)))
